@@ -33,4 +33,4 @@ def send_predict_request():
 
 # Run the application if this script is executed directly
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(host='0.0.0.0', debug=True, port=8080)
