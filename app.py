@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-MODEL_SERVICE_URL = "localhost:5000"
+MODEL_SERVICE_URL = "model-service:5000"
 
 
 def handle_prediction_request(url):
