@@ -1,15 +1,24 @@
+import os
 import requests
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request   
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
-MODEL_SERVICE_URL = "model-service:5000"
+# Use environment variable or default to 'model-service:5000'
+MODEL_SERVICE_URL = os.getenv("MODEL_SERVICE_URL", "http://model-service:5000")
 
 
 def handle_prediction_request(url):
     if url:
-        response = requests.post(f"http://{MODEL_SERVICE_URL}/predict", json={'url': url})
-        return jsonify(response.json()), response.status_code
+        try:
+            response = requests.post(f"{MODEL_SERVICE_URL}/predict", json={'url': url})
+            response.raise_for_status()
+            return jsonify(response.json()), response.status_code
+        except requests.exceptions.RequestException as e:
+            app.logger.error(f"Request to model service failed: {e}")
+            return jsonify({"error": "Failed to process request to model service"}), 500
     else:
         return jsonify({"error": "URL not provided in request"}), 400
 
