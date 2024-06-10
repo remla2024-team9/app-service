@@ -3,7 +3,7 @@ import requests
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import time
-from prometheus_client import Counter, Gauge, Summary, generate_latest
+from prometheus_client import Counter, Gauge, Summary, generate_latest, start_http_server
 
 app = Flask(__name__)
 CORS(app)
@@ -51,6 +51,6 @@ def send_predict_request():
 def metrics():
     return generate_latest(), 200
 
-# Run the application if this script is executed directly
 if __name__ == '__main__':
+    start_http_server(8000)  
     app.run(host='0.0.0.0', debug=True, port=8080)
