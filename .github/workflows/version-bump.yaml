@@ -34,6 +34,14 @@ jobs:
           poetry version $NEW_VERSION
           echo "::set-output name=new_version::$NEW_VERSION"
 
+      - name: Verify version consistency
+        run: |
+          POETRY_VERSION=$(poetry version --short)
+          if [ "$POETRY_VERSION" != "${{ steps.bump_version.outputs.new_version }}" ]; then
+            echo "Version in pyproject.toml ($POETRY_VERSION) does not match the expected new version (${{ steps.bump_version.outputs.new_version }})"
+            exit 1
+          fi
+
       - name: Commit version bump
         run: |
           git config --global user.name 'github-actions[bot]'
